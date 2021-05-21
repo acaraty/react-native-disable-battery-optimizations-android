@@ -25,19 +25,13 @@ public class RNDisableBatteryOptimizationsModule extends ReactContextBaseJavaMod
   @ReactMethod
   public void openBatteryModal() {
 	  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      
+      String packageName = this.reactContext.getPackageName();
+
 		  Intent settingsIntent = new Intent();
       settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      try {
-        settingsIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-        reactContext.startActivity(settingsIntent);
-        Toast.makeText(reactContext, "Unable to open request. Please set application as Not Optimized.", Toast.LENGTH_LONG).show();
-      } catch (ActivityNotFoundException e2) {
-        settingsIntent.setAction(Settings.ACTION_SETTINGS);
-        reactContext.startActivity(settingsIntent);
-        Toast.makeText(reactContext, "Unable to open battery optimization settings. Please set application as Not Optimized in battery optimization settings.", Toast.LENGTH_LONG).show();
-      }
-    
+      settingsIntent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+      settingsIntent.setData(Uri.parse("package:" + packageName));
+      reactContext.startActivity(settingsIntent);
 	  }
 
   }
